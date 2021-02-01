@@ -24,11 +24,11 @@ func (e GNjson) Decode(input []byte, output interface{}) error {
 	return err
 }
 
-func (e GNjson) Output(input interface{}, f format.Format) string {
+func (e GNjson) Output(input interface{}, f Format) string {
 	switch f {
-	case format.CompactJSON:
+	case CompactJSON:
 		e.Pretty = false
-	case format.PrettyJSON:
+	case PrettyJSON:
 		e.Pretty = true
 	default:
 		return ""
