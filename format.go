@@ -33,10 +33,10 @@ func (f Format) String() string {
 	return formatMap[f]
 }
 
-// New is a constructor that converts a string into a corresponding format.
+// NewFormat is a constructor that converts a string into a corresponding format.
 // If string cannot be converted, the constructor returns an error and
 // and FormatNone format.
-func New(s string) (Format, error) {
+func NewFormat(s string) (Format, error) {
 	if f, ok := formatStringMap[s]; ok {
 		return f, nil
 	}
