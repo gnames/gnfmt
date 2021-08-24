@@ -8,17 +8,23 @@ type Format int
 const (
 	// FormatNone is for cases when format is not set yet.
 	FormatNone Format = iota
-	// CSV sets output to csv.
+
+	// CSV sets output to comma-separated values.
 	CSV
+
 	// CompactJSON sets output into one-liner JSON.
 	CompactJSON
+
 	// PrettyJSON sets output into easier to read JSON with new lines and
 	// indentations.
 	PrettyJSON
+
+	// TSV sets output to tab-separated values.
+	TSV
 )
 
 var formatStringMap = map[string]Format{
-	"csv": CSV, "compact": CompactJSON, "pretty": PrettyJSON,
+	"csv": CSV, "compact": CompactJSON, "pretty": PrettyJSON, "tsv": TSV,
 }
 
 var formatMap = map[Format]string{
@@ -26,6 +32,7 @@ var formatMap = map[Format]string{
 	CSV:         "CSV",
 	CompactJSON: "compact JSON",
 	PrettyJSON:  "pretty JSON",
+	TSV:         "TSV",
 }
 
 // String representation of a format.
@@ -42,7 +49,7 @@ func NewFormat(s string) (Format, error) {
 	}
 
 	err := fmt.Errorf(
-		"cannot convert '%s' to format, use 'csv', 'compact' or 'pretty' as input",
+		"cannot convert '%s' to format, use 'csv', 'tsv', 'compact' or 'pretty' as input",
 		s,
 	)
 	return FormatNone, err

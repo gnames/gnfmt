@@ -18,10 +18,11 @@ func TestNewFormat(t *testing.T) {
 		{"csv", "csv", gnfmt.CSV, true},
 		{"compact", "compact", gnfmt.CompactJSON, true},
 		{"pretty", "pretty", gnfmt.PrettyJSON, true},
+		{"tsv", "tsv", gnfmt.TSV, true},
 		{"bad", "bad", gnfmt.FormatNone, false},
 	}
 	for _, v := range tests {
-		t.Run(v.name, func(t *testing.T) {
+		t.Run(v.name, func(_ *testing.T) {
 			gf, err := gnfmt.NewFormat(v.input)
 			is.Equal(v.output, gf)
 			is.Equal(v.errNil, err == nil)
@@ -37,11 +38,12 @@ func TestString(t *testing.T) {
 		output string
 	}{
 		{"csv", gnfmt.CSV, "CSV"},
+		{"tsv", gnfmt.TSV, "TSV"},
 		{"compact", gnfmt.CompactJSON, "compact JSON"},
 		{"pretty", gnfmt.PrettyJSON, "pretty JSON"},
 	}
 	for _, v := range tests {
-		t.Run(v.name, func(t *testing.T) {
+		t.Run(v.name, func(_ *testing.T) {
 			s := v.input.String()
 			is.Equal(v.output, s)
 		})

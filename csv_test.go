@@ -1,9 +1,10 @@
 package gnfmt_test
 
 import (
-	"github.com/gnames/gnfmt"
 	"path/filepath"
 	"testing"
+
+	"github.com/gnames/gnfmt"
 )
 
 func TestReadHeaderCSV(t *testing.T) {
@@ -29,9 +30,18 @@ func TestReadHeaderCSV(t *testing.T) {
 
 func TestToCSV(t *testing.T) {
 	ss := []string{"one\"two", "three,four", "five"}
-	res := gnfmt.ToCSV(ss)
+	res := gnfmt.ToCSV(ss, ',')
 	testRes := `"one""two","three,four",five`
 	if res != testRes {
 		t.Errorf("ToCSV failed, got '%s' instad of '%s'", res, testRes)
+	}
+}
+
+func TestToTSV(t *testing.T) {
+	ss := []string{"one\"two", "three\tfour", "five"}
+	res := gnfmt.ToCSV(ss, '\t')
+	testRes := "\"one\"\"two\"\t\"three\tfour\"\tfive"
+	if res != testRes {
+		t.Errorf("ToTSV failed, got '%s' instad of '%s'", res, testRes)
 	}
 }

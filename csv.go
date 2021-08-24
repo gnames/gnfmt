@@ -10,10 +10,10 @@ import (
 	"unicode/utf8"
 )
 
-// ReadHeaderCSV only reads the first line of a CSV input. It takes
-// a path to a CSV-encoded file and a separator character. It returns
-// back a map with name of a field, and its index. It also returns an
-// error, if the header could not be read.
+// ReadHeaderCSV only reads the first line of a CSV/TSV input. It takes a path
+// to a CSV/TSV-encoded file and a separator character. It returns back a map
+// with name of a field, and its index. It also returns an error, if the header
+// could not be read.
 func ReadHeaderCSV(path string, sep rune) (map[string]int, error) {
 	res := make(map[string]int)
 	f, err := os.Open(path)
@@ -26,25 +26,28 @@ func ReadHeaderCSV(path string, sep rune) (map[string]int, error) {
 
 	// skip header
 	header, err := r.Read()
+	if err != nil {
+		return nil, err
+	}
 	for i, v := range header {
 		res[v] = i
 	}
 	return res, nil
 }
 
-// ToCSV takes a slice of strings and converts them to a comma-separated
-// CSV row with '"' as a field quote. On Windows machine the row ends with
-// '\r\n', in all other cases with '\n'
-func ToCSV(record []string) string {
+// ToCSV takes a slice of strings and converts them to a CSV/TSV row with '"'
+// as a field quote. On Windows machine the row ends with '\r\n', in all other
+// cases with '\n'
+func ToCSV(record []string, sep rune) string {
 	var b bytes.Buffer
 	useCRLF := runtime.GOOS == "windows"
 
 	for i, field := range record {
 		if i > 0 {
-			b.WriteRune(',')
+			b.WriteRune(sep)
 		}
 
-		if !fieldNeedsQuotes(field) {
+		if !fieldNeedsQuotes(field, sep) {
 			b.WriteString(field)
 			continue
 		}
@@ -85,11 +88,11 @@ func ToCSV(record []string) string {
 	return b.String()
 }
 
-func fieldNeedsQuotes(field string) bool {
+func fieldNeedsQuotes(field string, sep rune) bool {
 	if field == "" {
 		return false
 	}
-	if field == `\.` || strings.ContainsRune(field, ',') || strings.ContainsAny(field, "\"\r\n") {
+	if field == `\.` || strings.ContainsRune(field, sep) || strings.ContainsAny(field, "\"\r\n") {
 		return true
 	}
 
