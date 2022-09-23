@@ -46,6 +46,6 @@ func (e GNjson) Output(input interface{}, f Format) string {
 		return ""
 	}
 	res := string(resByte)
-	res = strings.Replace(res, "\\u0026", "&", -1)
+	res = strings.ReplaceAll(res, "\\u0026", "&")
 	return res
 }
