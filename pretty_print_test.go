@@ -1,7 +1,6 @@
 package gnfmt_test
 
 import (
-	"fmt"
 	"math"
 	"testing"
 
@@ -27,6 +26,5 @@ func TestPpr(t *testing.T) {
 		E: math.Pi,
 	}
 	res := gnfmt.Ppr(o)
-	assert.Equal(1, 1)
-	fmt.Println(res)
+	assert.Equal("{\n  \"A\": \"one\",\n  \"B\": 345,\n  \"C\": [\n    1,\n    44\n  ],\n  \"D\": [\n    \"one\",\n    \"two\"\n  ],\n  \"E\": 3.1415927\n}", res)
 }

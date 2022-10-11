@@ -77,7 +77,7 @@ func TestOutput(t *testing.T) {
 	}
 
 	for _, v := range tests {
-		t.Run(v.name, func(t *testing.T) {
+		t.Run(v.name, func(_ *testing.T) {
 			enc := GNjson{}
 			s := enc.Output(v.input, v.format)
 			is.Equal(v.output, s)
