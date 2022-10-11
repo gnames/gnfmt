@@ -36,8 +36,12 @@ func TimeString(secs float64) string {
 
 	dur.seconds = resid
 	res := ""
-	if dur.days > 0 {
-		res += fmt.Sprintf("%d days, ", dur.days)
+	switch dur.days {
+	case 0:
+	case 1:
+		res += fmt.Sprintf("%d day ", dur.days)
+	default:
+		res += fmt.Sprintf("%d days ", dur.days)
 	}
 	res += fmt.Sprintf("%02d:%02d:%02d", dur.hours, dur.minutes, dur.seconds)
 	return res
