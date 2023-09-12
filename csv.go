@@ -68,7 +68,9 @@ func ToCSV(record []string, sep rune) string {
 			if len(field) > 0 {
 				switch field[0] {
 				case '"':
-					b.WriteString(`""`)
+					if sep == ',' {
+						b.WriteString(`""`)
+					}
 				case '\r':
 					if !useCRLF {
 						b.WriteByte('\r')
