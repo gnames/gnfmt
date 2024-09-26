@@ -5,7 +5,39 @@ import (
 	"testing"
 
 	"github.com/gnames/gnfmt"
+	"github.com/stretchr/testify/assert"
 )
+
+func TestNormRowSize(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		msg      string
+		row      []string
+		fielsNum int
+		res      []string
+	}{
+		{"==",
+			[]string{"a", "b", "c"},
+			3,
+			[]string{"a", "b", "c"},
+		},
+		{">",
+			[]string{"a", "b", "c", "d", "e"},
+			3,
+			[]string{"a", "b", "c"},
+		},
+		{"<",
+			[]string{"a", "b"},
+			3,
+			[]string{"a", "b", ""},
+		},
+	}
+
+	for _, v := range tests {
+		res := gnfmt.NormRowSize(v.row, v.fielsNum)
+		assert.Equal(v.res, res)
+	}
+}
 
 func TestReadHeaderCSV(t *testing.T) {
 	path := filepath.Join("testdata", "test.tsv")

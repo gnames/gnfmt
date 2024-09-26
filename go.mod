@@ -1,11 +1,11 @@
 module github.com/gnames/gnfmt
 
-go 1.21
+go 1.22.5
 
 require (
 	github.com/json-iterator/go v1.1.12
 	github.com/matryer/is v1.4.1
-	github.com/stretchr/testify v1.8.4
+	github.com/stretchr/testify v1.9.0
 )
 
 require (

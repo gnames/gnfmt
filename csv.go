@@ -68,9 +68,7 @@ func ToCSV(record []string, sep rune) string {
 			if len(field) > 0 {
 				switch field[0] {
 				case '"':
-					if sep == ',' {
-						b.WriteString(`""`)
-					}
+					b.WriteString(`""`)
 				case '\r':
 					if !useCRLF {
 						b.WriteByte('\r')
@@ -88,6 +86,20 @@ func ToCSV(record []string, sep rune) string {
 		b.WriteByte('"')
 	}
 	return b.String()
+}
+
+// NormRowSize takes a row with less or more fields than required and
+// either truncates it, or expands with empty fields to fit to the
+// fieldsNum size.
+func NormRowSize(row []string, fieldsNum int) []string {
+	if len(row) > fieldsNum {
+		return row[:fieldsNum]
+	}
+
+	for range fieldsNum - len(row) {
+		row = append(row, "")
+	}
+	return row
 }
 
 func fieldNeedsQuotes(field string, sep rune) bool {
