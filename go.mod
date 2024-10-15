@@ -3,6 +3,7 @@ module github.com/gnames/gnfmt
 go 1.22.5
 
 require (
+	github.com/dustin/go-humanize v1.0.1
 	github.com/json-iterator/go v1.1.12
 	github.com/matryer/is v1.4.1
 	github.com/stretchr/testify v1.9.0
