@@ -134,10 +134,10 @@ func (g *gntsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 	return int(count), nil
 }
 
-// Write writes CSV data received from the provided channel. Each
+// WriteStream writes CSV data received from the provided channel. Each
 // string slice received from the channel represents a row in the CSV.
 // It uses a context for cancellation.
-func (g *gntsv) Write(ctx context.Context, ch <-chan []string) error {
+func (g *gntsv) WriteStream(ctx context.Context, ch <-chan []string) error {
 	f, err := os.Create(g.cfg.Path)
 	if err != nil {
 		return err

@@ -2,7 +2,9 @@ package config
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
+	"io"
 	"os"
 	"strings"
 
@@ -14,6 +16,9 @@ import (
 type Config struct {
 	// Path to the CSV file.
 	Path string
+
+	// Writer can be used for writing output instead of file.
+	Writer io.Writer
 
 	// Headers are the names of fields in the CSV file.
 	Headers []string
@@ -46,6 +51,13 @@ type Option func(*Config)
 func OptPath(s string) Option {
 	return func(cfg *Config) {
 		cfg.Path = s
+	}
+}
+
+// OptWriter sets Writer field of the Config.
+func OptWriter(w io.Writer) Option {
+	return func(cfg *Config) {
+		cfg.Writer = w
 	}
 }
 
@@ -104,36 +116,43 @@ func detectDelimiter(line string) rune {
 }
 
 // readLine reads the first line from a file.
-func readLine(path string) (string, error) {
+func readLine(path string) string {
+	if path == "" {
+		return ""
+	}
+
 	file, err := os.Open(path)
 	if err != nil {
-		return "", err
+		return ""
 	}
 	defer file.Close()
 
 	scanner := bufio.NewScanner(file)
 	if scanner.Scan() {
 		line := scanner.Text()
-		return line, nil
-	} else if scanner.Err() != nil {
-		return "", scanner.Err()
-	} else {
-		return "", fmt.Errorf("empty file: %s", path)
+		return line
 	}
+	return ""
 }
 
 // New creates a new Config by analyzing the first line of a CSV file
 // to determine the delimiter and headers. Options can be provided to
 // override the detected settings.
-func New(csvPath string, opts ...Option) (Config, error) {
+func New(opts ...Option) (Config, error) {
 	res := Config{
-		Path:   csvPath,
 		ColSep: ',',
 	}
 
+	for _, opt := range opts {
+		opt(&res)
+	}
+	if res.Path == "" && res.Writer == nil {
+		return res, errors.New("no input or output provided")
+	}
+
 	// try to open file
-	firstLine, err := readLine(csvPath)
-	if err == nil {
+	firstLine := readLine(res.Path)
+	if firstLine != "" {
 		delimiter := detectDelimiter(firstLine)
 		if delimiter == '?' {
 			return res, fmt.Errorf("cannot determine delimiter: '%s'", firstLine)
@@ -141,13 +160,13 @@ func New(csvPath string, opts ...Option) (Config, error) {
 
 		headers := strings.Split(firstLine, string(delimiter))
 		res = Config{
-			Path:      csvPath,
 			Headers:   headers,
 			ColSep:    delimiter,
 			FieldsNum: len(headers),
 		}
 	}
 
+	// we have to run opts again, because  Config is updated
 	for _, opt := range opts {
 		opt(&res)
 	}

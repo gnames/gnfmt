@@ -1,6 +1,7 @@
 package gncsv
 
 import (
+	"bytes"
 	"context"
 	"encoding/csv"
 	"fmt"
@@ -150,17 +151,42 @@ func (g *gncsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 	return int(count), nil
 }
 
-// Write writes CSV data received from the provided channel. Each
+// ToRow converts a slice of strings representing a CSV row
+// into a single string with comma separation.
+func ToRow(fields []string) string {
+	// Create a new CSV writer with a comma separator
+	var b bytes.Buffer
+	w := csv.NewWriter(&b)
+
+	// Write the row to the CSV writer
+	err := w.Write(fields)
+	if err != nil {
+		// very unlikely
+		return ""
+	}
+	w.Flush() // Ensure all data is written
+
+	// Get the resulting string from the buffer
+	return b.String()
+}
+
+// WriteStream writes CSV data received from the provided channel. Each
 // string slice received from the channel represents a row in the CSV.
 // It uses a context for cancellation.
-func (g *gncsv) Write(ctx context.Context, ch <-chan []string) error {
-	f, err := os.Create(g.cfg.Path)
-	if err != nil {
-		return err
-	}
-	defer f.Close()
+func (g *gncsv) WriteStream(ctx context.Context, ch <-chan []string) error {
+	var err error
+	var w *csv.Writer
+	if g.cfg.Path != "" {
+		f, err := os.Create(g.cfg.Path)
+		if err != nil {
+			return err
+		}
+		defer f.Close()
 
-	w := csv.NewWriter(f)
+		w = csv.NewWriter(f)
+	} else {
+		w = csv.NewWriter(g.cfg.Writer)
+	}
 
 	// Add headers, if they exist
 	if len(g.cfg.Headers) > 0 {

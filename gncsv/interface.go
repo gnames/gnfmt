@@ -24,8 +24,8 @@ type Reader interface {
 
 // Writer defines an interface for writing CSV data.
 type Writer interface {
-	// Write writes CSV data received from the provided channel. Each
+	// WriteStream writes CSV data received from the provided channel. Each
 	// string slice received from the channel represents a row in the CSV.
 	// It uses a context for cancellation.
-	Write(context.Context, <-chan []string) error
+	WriteStream(context.Context, <-chan []string) error
 }
