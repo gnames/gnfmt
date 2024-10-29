@@ -246,3 +246,34 @@ func TestBadRowsProcess(t *testing.T) {
 		assert.Equal(v.rowsNum, len(rows))
 	}
 }
+
+func TestTabWithQuotes(t *testing.T) {
+	assert := assert.New(t)
+	path := filepath.Join("testdata", "tab-w-quotes.csv")
+	opts := []config.Option{
+		config.OptPath(path),
+		config.OptWithQuotes(true),
+	}
+
+	cfg, err := config.New(opts...)
+	assert.Nil(err)
+	c := gncsv.New(cfg)
+	rows, err := c.ReadSlice(0, 0)
+	assert.Nil(err)
+	l := len(cfg.Headers)
+	for _, row := range rows {
+		assert.Equal(l, len(row))
+	}
+	assert.Equal(10, len(rows))
+
+	opts = []config.Option{
+		config.OptPath(path),
+	}
+
+	cfg, err = config.New(opts...)
+	assert.Nil(err)
+	c = gncsv.New(cfg)
+	rows, err = c.ReadSlice(0, 0)
+	assert.Nil(rows)
+	assert.NotNil(err)
+}

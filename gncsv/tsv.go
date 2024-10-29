@@ -224,7 +224,7 @@ func (g *gntsv) escapeFields(ss []string) []string {
 	for i := range ss {
 		rs := []rune(ss[i])
 		for ii := range rs {
-			if rs[ii] == g.cfg.ColSep {
+			if rs[ii] == g.cfg.ColSep || rs[ii] == '\n' {
 				// TODO find less destructive way to escape ColSep
 				rs[ii] = '�'
 			}

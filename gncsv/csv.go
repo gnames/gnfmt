@@ -31,6 +31,8 @@ func NewCSV(cfg config.Config) GnCSV {
 // of string slices, where each inner slice represents a row in the CSV.
 func (g *gncsv) ReadSlice(offset, limit int) ([][]string, error) {
 	r, f, err := g.newReader()
+	r.Comma = g.cfg.ColSep
+
 	if err != nil {
 		return nil, err
 	}
@@ -96,6 +98,7 @@ func (g *gncsv) ReadSlice(offset, limit int) ([][]string, error) {
 // any error encountered. It uses a context for cancellation.
 func (g *gncsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 	r, f, err := g.newReader()
+	r.Comma = g.cfg.ColSep
 	if err != nil {
 		return 0, err
 	}
