@@ -91,6 +91,12 @@ func (g *gntsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 	defer f.Close()
 
 	r := bufio.NewScanner(f)
+	// some lines are huge, and generate an error
+	// "bufio.Scanner: token too long". We are increasing the
+	// maximum buffer size here.
+	buf := make([]byte, 0, 64*1024)         // Set 64K buffer (same as default)
+	r.Buffer(buf, bufio.MaxScanTokenSize*4) // Set 256k for maximum token size
+
 	fieldsNum, lineNum := g.skipHeader(r)
 
 	var count int64
@@ -128,6 +134,12 @@ func (g *gntsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 			count++
 			ch <- row
 		}
+	}
+
+	if err := r.Err(); err != nil {
+		fmt.Fprintf(os.Stderr, "\r%s\r", strings.Repeat(" ", 50))
+		slog.Error("Scanner error", "error", err)
+		return int(count), err
 	}
 
 	fmt.Fprintf(os.Stderr, "\r%s\r", strings.Repeat(" ", 50))
