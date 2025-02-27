@@ -98,6 +98,7 @@ func TestWriteCSV(t *testing.T) {
 			assert.Nil(err)
 		}()
 		count, err := r.Read(context.Background(), ch)
+		assert.Nil(err)
 		close(ch)
 		wg.Wait()
 		assert.Equal(v.dataLen, count)
@@ -135,7 +136,7 @@ func TestIOWriter(t *testing.T) {
 			config.OptHeaders(headers),
 		}
 		cfgWrite, err := config.New(opts...)
-		assert.Nil(err)
+		assert.Nil(err, v.msg)
 		w := gncsv.New(cfgWrite)
 		var wg sync.WaitGroup
 		wg.Add(1)
