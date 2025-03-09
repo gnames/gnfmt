@@ -20,6 +20,8 @@ type Reader interface {
 	// the provided channel. It returns the total number of rows read and
 	// any error encountered. It uses a context for cancellation.
 	Read(context.Context, chan<- []string) (int, error)
+
+	Headers() []string
 }
 
 // Writer defines an interface for writing CSV data.

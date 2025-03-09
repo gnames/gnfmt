@@ -24,6 +24,11 @@ func NewTSV(cfg config.Config) GnCSV {
 	return &res
 }
 
+// Headers returns headers detected in the file.
+func (g *gntsv) Headers() []string {
+	return g.cfg.Headers
+}
+
 // ReadSlice reads a portion of the CSV data, starting at the given
 // offset and reading up to the specified limit. It returns a slice
 // of string slices, where each inner slice represents a row in the CSV.

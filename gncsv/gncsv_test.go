@@ -16,6 +16,30 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestHeaders(t *testing.T) {
+	assert := assert.New(t)
+	headers := []string{
+		"taxonID", "scientificName", "kingdom", "phylum", "class", "order",
+		"family", "genus", "nomenclaturalCode",
+	}
+	tests := []struct {
+		msg, path string
+		headers   []string
+	}{
+		{"csv", "comma-norm.csv", headers},
+		{"pipe", "pipe-norm.csv", headers},
+		{"tab", "tab-norm.csv", headers},
+	}
+	for _, v := range tests {
+		path := filepath.Join("testdata", v.path)
+		opt := config.OptPath(path)
+		cfg, err := config.New(opt)
+		assert.Nil(err)
+		c := gncsv.New(cfg)
+		assert.Equal(v.headers, c.Headers())
+	}
+}
+
 func TestReadCSV(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {
