@@ -23,6 +23,9 @@ type Config struct {
 	// Headers are the names of fields in the CSV file.
 	Headers []string
 
+	// SkipHeaders
+	SkipHeaders bool
+
 	// ColSep is the delimiter character used in the CSV file.
 	ColSep rune
 
@@ -150,9 +153,7 @@ func readLine(path string) string {
 // to determine the delimiter and headers. Options can be provided to
 // override the detected settings.
 func New(opts ...Option) (Config, error) {
-	res := Config{
-		ColSep: ',',
-	}
+	res := Config{ColSep: ','}
 
 	for _, opt := range opts {
 		opt(&res)
@@ -165,15 +166,19 @@ func New(opts ...Option) (Config, error) {
 	firstLine := readLine(res.Path)
 	if firstLine != "" {
 		delimiter := detectDelimiter(firstLine)
-		if delimiter == '?' {
-			return res, fmt.Errorf("cannot determine delimiter: '%s'", firstLine)
+
+		var skipHeaders bool
+		headers := res.Headers
+		if len(headers) == 0 {
+			headers = strings.Split(firstLine, string(delimiter))
+			skipHeaders = true
 		}
 
-		headers := strings.Split(firstLine, string(delimiter))
 		res = Config{
-			Headers:   headers,
-			ColSep:    delimiter,
-			FieldsNum: len(headers),
+			Headers:     headers,
+			SkipHeaders: skipHeaders,
+			ColSep:      delimiter,
+			FieldsNum:   len(headers),
 		}
 	}
 
@@ -181,5 +186,10 @@ func New(opts ...Option) (Config, error) {
 	for _, opt := range opts {
 		opt(&res)
 	}
+
+	if res.ColSep == '?' {
+		return res, fmt.Errorf("cannot determine delimiter: '%s'", firstLine)
+	}
+
 	return res, nil
 }

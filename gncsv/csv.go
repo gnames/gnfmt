@@ -236,6 +236,9 @@ func (g *gncsv) newReader() (*csv.Reader, *os.File, error) {
 }
 
 func (g *gncsv) skipHeader(r *csv.Reader) (fieldsNum, lineNum int, err error) {
+	if !g.cfg.SkipHeaders {
+		return len(g.cfg.Headers), 0, nil
+	}
 	// ignore headers if they are given
 	if len(g.cfg.Headers) > 0 {
 		lineNum++

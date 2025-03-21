@@ -7,6 +7,7 @@ import (
 	"log/slog"
 	"os"
 	"path/filepath"
+	"strings"
 	"sync"
 	"testing"
 
@@ -37,6 +38,52 @@ func TestHeaders(t *testing.T) {
 		assert.Nil(err)
 		c := gncsv.New(cfg)
 		assert.Equal(v.headers, c.Headers())
+	}
+}
+
+func TestNoHeadersCSV(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		msg, path, dataFirst string
+		dataLen              int
+	}{
+		{"csv", "comma-no-headers.csv", "2|Nothocercus bonapartei", 10},
+		{"tab", "tab-no-headers.csv", "2|Nothocercus bonapartei", 10},
+	}
+
+	for _, v := range tests {
+		path := filepath.Join("testdata", v.path)
+		headers := []string{
+			"taxonID", "scientificName", "kingdom", "phylum",
+			"class", "order", "family", "genus", "nomenclaturalCode",
+		}
+
+		opts := []config.Option{
+			config.OptPath(path),
+			config.OptHeaders(headers),
+		}
+		cfg, err := config.New(opts...)
+		assert.Nil(err)
+
+		c := gncsv.New(cfg)
+
+		var wg sync.WaitGroup
+		wg.Add(1)
+		ch := make(chan []string)
+		var res [][]string
+		go func() {
+			defer wg.Done()
+			for row := range ch {
+				res = append(res, row)
+			}
+		}()
+		count, err := c.Read(context.Background(), ch)
+		close(ch)
+		wg.Wait()
+		first := strings.Join(res[0][0:2], "|")
+		assert.Equal(v.dataFirst, first)
+		assert.Equal(count, len(res))
+		assert.Equal(v.dataLen, len(res))
 	}
 }
 
