@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gnames/gnfmt"
+	"github.com/gnames/gnsys"
 )
 
 // Config provides settings for processing CSV data, including
@@ -36,10 +37,6 @@ type Config struct {
 	// number of fields. Options include processing, ignoring, or
 	// raising an error (default).
 	BadRowMode gnfmt.BadRow
-
-	// WithQuotes is true if `"` is used when need arises to
-	// protect field separators, new lines inside a field.
-	WithQuotes bool
 }
 
 // Update creates a copy of the Config and applies the provided
@@ -86,13 +83,6 @@ func OptColSep(r rune) Option {
 func OptBadRowMode(br gnfmt.BadRow) Option {
 	return func(cfg *Config) {
 		cfg.BadRowMode = br
-	}
-}
-
-// OptWithQuotes sets WithQuotes field of the Config.
-func OptWithQuotes(b bool) Option {
-	return func(cfg *Config) {
-		cfg.WithQuotes = b
 	}
 }
 
@@ -149,37 +139,71 @@ func readLine(path string) string {
 	return ""
 }
 
+var ErrNoInputOrOutput = errors.New("no input or output provided")
+var ErrNoHeadersOrColSep = errors.New("provide headers and/or delimiter manually")
+var ErrNoHeaders = errors.New("provide headers manually")
+var ErrFileMissing = errors.New("provide valid input file path")
+var ErrEmptyFirstLine = fmt.Errorf("empty first line")
+
 // New creates a new Config by analyzing the first line of a CSV file
 // to determine the delimiter and headers. Options can be provided to
 // override the detected settings.
 func New(opts ...Option) (Config, error) {
-	res := Config{ColSep: ','}
+	res := Config{}
 
 	for _, opt := range opts {
 		opt(&res)
 	}
+	res.FieldsNum = len(res.Headers)
+
+	// we need either file to read from of output for new CSV.
 	if res.Path == "" && res.Writer == nil {
-		return res, errors.New("no input or output provided")
+		return res, ErrNoInputOrOutput
+	}
+
+	if res.ColSep != 0 && len(res.Headers) > 0 {
+		return res, nil
+	}
+
+	if res.Writer != nil {
+		if res.ColSep == 0 {
+			res.ColSep = ','
+		}
+		if len(res.Headers) == 0 {
+			return res, ErrNoHeaders
+		}
+
+		return res, nil
+	}
+
+	if exists, _ := gnsys.FileExists(res.Path); !exists {
+		return res, ErrFileMissing
 	}
 
 	// try to open file
 	firstLine := readLine(res.Path)
-	if firstLine != "" {
-		delimiter := detectDelimiter(firstLine)
+	delimiter := res.ColSep
+	headers := res.Headers
+	skipHeaders := res.SkipHeaders
 
-		var skipHeaders bool
-		headers := res.Headers
-		if len(headers) == 0 {
-			headers = strings.Split(firstLine, string(delimiter))
-			skipHeaders = true
-		}
+	if firstLine == "" {
+		return res, ErrEmptyFirstLine
+	}
 
-		res = Config{
-			Headers:     headers,
-			SkipHeaders: skipHeaders,
-			ColSep:      delimiter,
-			FieldsNum:   len(headers),
-		}
+	if delimiter == 0 {
+		delimiter = detectDelimiter(firstLine)
+	}
+
+	if len(headers) == 0 {
+		headers = strings.Split(firstLine, string(delimiter))
+		skipHeaders = true
+	}
+
+	res = Config{
+		Headers:     headers,
+		SkipHeaders: skipHeaders,
+		ColSep:      delimiter,
+		FieldsNum:   len(headers),
 	}
 
 	// we have to run opts again, because  Config is updated
@@ -187,9 +211,10 @@ func New(opts ...Option) (Config, error) {
 		opt(&res)
 	}
 
-	if res.ColSep == '?' {
-		return res, fmt.Errorf("cannot determine delimiter: '%s'", firstLine)
+	if res.ColSep == 0 || len(res.Headers) == 0 {
+		return res, ErrNoHeadersOrColSep
 	}
+	res.FieldsNum = len(res.Headers)
 
 	return res, nil
 }

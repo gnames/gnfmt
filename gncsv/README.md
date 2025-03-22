@@ -13,7 +13,6 @@ import csvConfig "github.com/gnames/gnfmt/gncsv/config"
 opts := []csvConfig.Option{
     csvConfig.OptPath(path),
     csvConfig.OptBadRowMode(cfg.BadRow),
-    csvConfig.OptWithQuotes(cfg.WithQuotes),
 }
 chIn := make(chan []string)
 // create new config with required options.

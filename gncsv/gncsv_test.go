@@ -3,6 +3,7 @@ package gncsv_test
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"log/slog"
 	"os"
@@ -78,6 +79,7 @@ func TestNoHeadersCSV(t *testing.T) {
 			}
 		}()
 		count, err := c.Read(context.Background(), ch)
+		assert.Nil(err)
 		close(ch)
 		wg.Wait()
 		first := strings.Join(res[0][0:2], "|")
@@ -124,6 +126,7 @@ func TestReadCSV(t *testing.T) {
 			}
 		}()
 		count, err := c.Read(context.Background(), ch)
+		assert.Nil(err)
 		close(ch)
 		wg.Wait()
 		assert.Equal(count, len(res))
@@ -324,7 +327,6 @@ func TestTabWithQuotes(t *testing.T) {
 	path := filepath.Join("testdata", "tab-w-quotes.csv")
 	opts := []config.Option{
 		config.OptPath(path),
-		config.OptWithQuotes(true),
 	}
 
 	cfg, err := config.New(opts...)
@@ -337,15 +339,152 @@ func TestTabWithQuotes(t *testing.T) {
 		assert.Equal(l, len(row))
 	}
 	assert.Equal(10, len(rows))
+}
 
-	opts = []config.Option{
+func TestReadChunks(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		msg, path                     string
+		chunkSize, chunksNum, dataLen int
+	}{
+		{"csv", "comma-norm.csv", 3, 4, 10},
+		{"pipe", "pipe-norm.csv", 4, 3, 10},
+		{"tab", "tab-norm.csv", 5, 2, 10},
+	}
+
+	for _, v := range tests {
+		path := filepath.Join("testdata", v.path)
+		opt := config.OptPath(path)
+		cfg, err := config.New(opt)
+		assert.Nil(err)
+		c := gncsv.New(cfg)
+
+		chOut := make(chan [][]string)
+		var wg sync.WaitGroup
+		var res [][]string
+
+		var chunksCount int
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			for chunk := range chOut {
+				chunksCount++
+				res = append(res, chunk...)
+			}
+		}()
+
+		ctx := context.Background()
+		count, err := c.ReadChunks(ctx, chOut, v.chunkSize)
+		close(chOut)
+		wg.Wait()
+
+		assert.Nil(err, v.msg)
+		assert.Equal(v.dataLen, count, v.msg)
+		assert.Equal(v.dataLen, len(res), v.msg)
+		assert.Equal(v.chunksNum, chunksCount, v.msg)
+	}
+}
+
+// func ExampleReader() {
+// 	path := filepath.Join("testdata", "comma-norm.csv")
+// 	opts := []config.Option{
+// 		config.OptPath(path),
+// 	}
+//
+// 	cfg, err := config.New(opts...)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// 	c := gncsv.New(cfg)
+//
+// 	rows, err := c.ReadSlice(0, 3)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+//
+// 	for _, row := range rows {
+// 		fmt.Println(strings.Join(row, ","))
+// 	}
+//
+// 	// Output:
+// 	// 2,Nothocercus bonapartei,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Nothocercus,ICZN
+// 	// 1,Tinamus major,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Tinamus,ICZN
+// 	// 3,Crypturellus soui,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+// }
+
+func ExampleReader() {
+	path := filepath.Join("testdata", "comma-norm.csv")
+	opts := []config.Option{
 		config.OptPath(path),
 	}
 
-	cfg, err = config.New(opts...)
-	assert.Nil(err)
-	c = gncsv.New(cfg)
-	rows, err = c.ReadSlice(0, 0)
-	assert.Nil(rows)
-	assert.NotNil(err)
+	cfg, err := config.New(opts...)
+	if err != nil {
+		panic(err)
+	}
+	c := gncsv.New(cfg)
+
+	chOut := make(chan [][]string)
+	var wg sync.WaitGroup
+
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for chunk := range chOut {
+			for _, row := range chunk {
+				fmt.Println(strings.Join(row, ","))
+			}
+		}
+	}()
+
+	ctx := context.Background()
+	if _, err := c.ReadChunks(ctx, chOut, 3); err != nil {
+		panic(err)
+	}
+	close(chOut)
+	wg.Wait()
+
+	// Output:
+	// 2,Nothocercus bonapartei,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Nothocercus,ICZN
+	// 1,Tinamus major,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Tinamus,ICZN
+	// 3,Crypturellus soui,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 4,Crypturellus cinnamomeus,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 5,Crypturellus boucardi,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 6,Crypturellus kerriae,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 7,Dendrocygna viduata,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+	// 8,Dendrocygna autumnalis,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+	// 9,Dendrocygna arborea,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+	// 10,Dendrocygna bicolor,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+}
+
+func ExampleWriter() {
+	var b bytes.Buffer
+	writeOpts := []config.Option{
+		config.OptWriter(&b),
+		config.OptHeaders([]string{"header1", "header2", "header3"}),
+	}
+	cfg, err := config.New(writeOpts...)
+	if err != nil {
+		panic(err)
+	}
+	w := gncsv.New(cfg)
+
+	ch := make(chan []string)
+	go func() {
+		defer close(ch)
+		for range 3 {
+			ch <- []string{"val1", "val2", "val3"}
+		}
+	}()
+
+	if err := w.WriteStream(context.Background(), ch); err != nil {
+		panic(err)
+	}
+
+	fmt.Println(b.String())
+	// Output:
+	// header1,header2,header3
+	// val1,val2,val3
+	// val1,val2,val3
+	// val1,val2,val3
 }
