@@ -385,34 +385,75 @@ func TestReadChunks(t *testing.T) {
 	}
 }
 
-// func ExampleReader() {
-// 	path := filepath.Join("testdata", "comma-norm.csv")
-// 	opts := []config.Option{
-// 		config.OptPath(path),
-// 	}
-//
-// 	cfg, err := config.New(opts...)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// 	c := gncsv.New(cfg)
-//
-// 	rows, err := c.ReadSlice(0, 3)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-//
-// 	for _, row := range rows {
-// 		fmt.Println(strings.Join(row, ","))
-// 	}
-//
-// 	// Output:
-// 	// 2,Nothocercus bonapartei,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Nothocercus,ICZN
-// 	// 1,Tinamus major,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Tinamus,ICZN
-// 	// 3,Crypturellus soui,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
-// }
+func ExampleReader_ReadSlice() {
+	path := filepath.Join("testdata", "comma-norm.csv")
+	opts := []config.Option{
+		config.OptPath(path),
+	}
 
-func ExampleReader() {
+	cfg, err := config.New(opts...)
+	if err != nil {
+		panic(err)
+	}
+	c := gncsv.New(cfg)
+
+	rows, err := c.ReadSlice(0, 3)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, row := range rows {
+		fmt.Println(strings.Join(row, ","))
+	}
+
+	// Output:
+	// 2,Nothocercus bonapartei,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Nothocercus,ICZN
+	// 1,Tinamus major,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Tinamus,ICZN
+	// 3,Crypturellus soui,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+}
+
+func ExampleReader_Read() {
+	path := filepath.Join("testdata", "comma-norm.csv")
+	opts := []config.Option{
+		config.OptPath(path),
+	}
+
+	cfg, err := config.New(opts...)
+	if err != nil {
+		panic(err)
+	}
+	c := gncsv.New(cfg)
+
+	ch := make(chan []string)
+	var wg sync.WaitGroup
+	wg.Add(1)
+	go func() {
+		defer wg.Done()
+		for row := range ch {
+			fmt.Println(strings.Join(row, ","))
+		}
+	}()
+	_, err = c.Read(context.Background(), ch)
+	if err != nil {
+		panic(err)
+	}
+	close(ch)
+	wg.Wait()
+
+	// Output:
+	// 2,Nothocercus bonapartei,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Nothocercus,ICZN
+	// 1,Tinamus major,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Tinamus,ICZN
+	// 3,Crypturellus soui,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 4,Crypturellus cinnamomeus,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 5,Crypturellus boucardi,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 6,Crypturellus kerriae,Animalia,Chordata,Aves,Tinamiformes,Tinamidae,Crypturellus,ICZN
+	// 7,Dendrocygna viduata,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+	// 8,Dendrocygna autumnalis,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+	// 9,Dendrocygna arborea,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+	// 10,Dendrocygna bicolor,Animalia,Chordata,Aves,Anseriformes,Anatidae,Dendrocygna,ICZN
+}
+
+func ExampleReader_ReadChunks() {
 	path := filepath.Join("testdata", "comma-norm.csv")
 	opts := []config.Option{
 		config.OptPath(path),
