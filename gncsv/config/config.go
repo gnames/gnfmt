@@ -72,6 +72,13 @@ func OptHeaders(ss []string) Option {
 	}
 }
 
+// OptSkipHeaders sets OptSkipHeaders field of the config.
+func OptSkipHeaders(b bool) Option {
+	return func(cfg *Config) {
+		cfg.SkipHeaders = b
+	}
+}
+
 // OptColSep sets the ColSep field of the Config.
 func OptColSep(r rune) Option {
 	return func(cfg *Config) {
