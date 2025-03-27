@@ -327,6 +327,7 @@ func TestTabWithQuotes(t *testing.T) {
 	path := filepath.Join("testdata", "tab-w-quotes.csv")
 	opts := []config.Option{
 		config.OptPath(path),
+		config.OptWithQuotes(true),
 	}
 
 	cfg, err := config.New(opts...)

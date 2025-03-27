@@ -37,6 +37,10 @@ type Config struct {
 	// number of fields. Options include processing, ignoring, or
 	// raising an error (default).
 	BadRowMode gnfmt.BadRow
+
+	// WithQuotes is true if `"` is used when need arises to
+	// protect field separators, new lines inside a field.
+	WithQuotes bool
 }
 
 // Update creates a copy of the Config and applies the provided
@@ -90,6 +94,13 @@ func OptColSep(r rune) Option {
 func OptBadRowMode(br gnfmt.BadRow) Option {
 	return func(cfg *Config) {
 		cfg.BadRowMode = br
+	}
+}
+
+// OptWithQuotes sets WithQuotes field of the Config.
+func OptWithQuotes(b bool) Option {
+	return func(cfg *Config) {
+		cfg.WithQuotes = b
 	}
 }
 
