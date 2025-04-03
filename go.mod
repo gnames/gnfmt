@@ -4,6 +4,7 @@ go 1.24.1
 
 require (
 	github.com/dustin/go-humanize v1.0.1
+	github.com/gnames/gnlib v0.47.0
 	github.com/gnames/gnsys v0.3.8
 	github.com/json-iterator/go v1.1.12
 	github.com/matryer/is v1.4.1
@@ -25,5 +26,6 @@ require (
 	github.com/rivo/uniseg v0.4.7 // indirect
 	github.com/ulikunitz/xz v0.5.12 // indirect
 	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )

@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/gnames/gnfmt"
+	"github.com/gnames/gnlib"
 	"github.com/gnames/gnsys"
 )
 
@@ -214,6 +215,9 @@ func New(opts ...Option) (Config, error) {
 
 	if len(headers) == 0 {
 		headers = strings.Split(firstLine, string(delimiter))
+		headers = gnlib.Map(headers, func(s string) string {
+			return strings.Trim(s, `"`)
+		})
 		skipHeaders = true
 	}
 

@@ -141,6 +141,7 @@ func TestReadF(t *testing.T) {
 		msg, path, id, name string
 	}{
 		{"csv0", "comma-norm.csv", "2", "Nothocercus bonapartei"},
+		{"quoted", "comma-quoted.csv", "2", "Nothocercus bonapartei"},
 		{"tsv0", "tab-norm.csv", "2", "Nothocercus bonapartei"},
 		{"psv0", "pipe-norm.csv", "2", "Nothocercus bonapartei"},
 	}
