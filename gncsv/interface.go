@@ -67,7 +67,7 @@ type Reader interface {
 	// F is a field accessor. If the field with the given name exists, it returns
 	// the value of the field in the row. If not, returns empty string and an
 	// error.
-	F(row []string, f string) (string, error)
+	F(row []string, f string) string
 }
 
 // Writer defines an interface for writing CSV data.

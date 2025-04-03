@@ -153,14 +153,11 @@ func TestReadF(t *testing.T) {
 		c := gncsv.New(cfg)
 		sl, err := c.ReadSlice(0, 1)
 		assert.Nil(err)
-		id, err := c.F(sl[0], "taxoNiD")
-		assert.Nil(err)
+		id := c.F(sl[0], "taxoNiD")
 		assert.Equal(v.id, id)
-		name, err := c.F(sl[0], "ScientificName")
-		assert.Nil(err)
+		name := c.F(sl[0], "ScientificName")
 		assert.Equal(v.name, name)
-		unknown, err := c.F(sl[0], "smth")
-		assert.NotNil(err)
+		unknown := c.F(sl[0], "smth")
 		assert.Equal("", unknown)
 	}
 

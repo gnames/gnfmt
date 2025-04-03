@@ -1,7 +1,7 @@
 package gncsv
 
 import (
-	"fmt"
+	"log/slog"
 	"strings"
 
 	"github.com/gnames/gnfmt/gncsv/config"
@@ -18,12 +18,13 @@ func New(cfg config.Config) GnCSV {
 }
 
 // getField is a field accessor. If the field with the given name exists, it returns
-// the value of the field in the row. If not, returns empty string and an
-// error.
-func getField(headerMap map[string]int, row []string, field string) (string, error) {
+// the value of the field in the row. If not, returns empty string and
+// issues a warning.
+func getField(headerMap map[string]int, row []string, field string) string {
 	fieldLow := strings.ToLower(field)
 	if fieldNum, ok := headerMap[fieldLow]; ok {
-		return row[fieldNum], nil
+		return row[fieldNum]
 	}
-	return "", fmt.Errorf("unknown field: '%s'", field)
+	slog.Warn("Unknown field", "field", field)
+	return ""
 }

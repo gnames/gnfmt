@@ -38,7 +38,7 @@ func NewCSV(cfg config.Config) GnCSV {
 	return &res
 }
 
-func (g *gncsv) F(row []string, field string) (string, error) {
+func (g *gncsv) F(row []string, field string) string {
 	return getField(g.headerMap, row, field)
 }
 
