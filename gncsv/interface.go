@@ -63,6 +63,11 @@ type Reader interface {
 
 	// Headers returns the headers of the CSV file as a slice of strings.
 	Headers() []string
+
+	// F is a field accessor. If the field with the given name exists, it returns
+	// the value of the field in the row. If not, returns empty string and an
+	// error.
+	F(row []string, f string) (string, error)
 }
 
 // Writer defines an interface for writing CSV data.

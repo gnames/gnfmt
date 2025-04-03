@@ -19,15 +19,27 @@ import (
 
 // gncsv implements GnCSV interface.
 type gncsv struct {
-	cfg config.Config
+	cfg       config.Config
+	headerMap map[string]int
 }
 
 // New creates a new CSV or TSV/PSV reader/writer based on the provided
 // configuration. If the ColSep in the config is a comma, it creates
 // a CSV reader/writer. Otherwise, it creates a TSV reader/writer.
 func NewCSV(cfg config.Config) GnCSV {
-	res := gncsv{cfg: cfg}
+	res := gncsv{
+		cfg:       cfg,
+		headerMap: make(map[string]int),
+	}
+	for i, v := range cfg.Headers {
+		v = strings.ToLower(v)
+		res.headerMap[v] = i
+	}
 	return &res
+}
+
+func (g *gncsv) F(row []string, field string) (string, error) {
+	return getField(g.headerMap, row, field)
 }
 
 // Headers returns headers detected in the file, or provided with

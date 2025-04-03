@@ -135,6 +135,37 @@ func TestReadCSV(t *testing.T) {
 	}
 }
 
+func TestReadF(t *testing.T) {
+	assert := assert.New(t)
+	tests := []struct {
+		msg, path, id, name string
+	}{
+		{"csv0", "comma-norm.csv", "2", "Nothocercus bonapartei"},
+		{"tsv0", "tab-norm.csv", "2", "Nothocercus bonapartei"},
+		{"psv0", "pipe-norm.csv", "2", "Nothocercus bonapartei"},
+	}
+
+	for _, v := range tests {
+		path := filepath.Join("testdata", v.path)
+		opt := config.OptPath(path)
+		cfg, err := config.New(opt)
+		assert.Nil(err)
+		c := gncsv.New(cfg)
+		sl, err := c.ReadSlice(0, 1)
+		assert.Nil(err)
+		id, err := c.F(sl[0], "taxoNiD")
+		assert.Nil(err)
+		assert.Equal(v.id, id)
+		name, err := c.F(sl[0], "ScientificName")
+		assert.Nil(err)
+		assert.Equal(v.name, name)
+		unknown, err := c.F(sl[0], "smth")
+		assert.NotNil(err)
+		assert.Equal("", unknown)
+	}
+
+}
+
 func TestWriteCSV(t *testing.T) {
 	assert := assert.New(t)
 	tests := []struct {

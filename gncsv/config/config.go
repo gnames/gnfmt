@@ -126,7 +126,7 @@ func detectDelimiter(line string) rune {
 			count['|']++
 		}
 	}
-	res := '?'
+	res := rune(0)
 	var maxCount int
 	for k, v := range count {
 		if v > maxCount {

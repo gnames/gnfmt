@@ -17,13 +17,25 @@ import (
 
 // gntsv implements GnCSV interface.
 type gntsv struct {
-	cfg config.Config
+	cfg       config.Config
+	headerMap map[string]int
 }
 
 // NewTSV creates a new GnCSV instance.
 func NewTSV(cfg config.Config) GnCSV {
-	res := gntsv{cfg: cfg}
+	res := gntsv{
+		cfg:       cfg,
+		headerMap: make(map[string]int),
+	}
+	for i, v := range cfg.Headers {
+		v = strings.ToLower(v)
+		res.headerMap[v] = i
+	}
 	return &res
+}
+
+func (g *gntsv) F(row []string, field string) (string, error) {
+	return getField(g.headerMap, row, field)
 }
 
 // Headers returns headers detected in the file, or provided with
