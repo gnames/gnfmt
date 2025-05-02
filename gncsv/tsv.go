@@ -123,11 +123,6 @@ func (g *gntsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 	for r.Scan() {
 		lineNum++
 
-		if count%100_000 == 0 {
-			fmt.Fprintf(os.Stderr, "\r%s", strings.Repeat(" ", 50))
-			fmt.Fprintf(os.Stderr, "\rProcessed %s lines", humanize.Comma(count))
-		}
-
 		line := r.Text()
 		sep := string(g.cfg.ColSep)
 		row := strings.Split(line, sep)
@@ -147,12 +142,17 @@ func (g *gntsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 			row = gnfmt.NormRowSize(row, fieldsNum)
 		}
 
+		count++
+		if count%100_000 == 0 {
+			fmt.Fprintf(os.Stderr, "\r%s", strings.Repeat(" ", 50))
+			fmt.Fprintf(os.Stderr, "\rRead %s file lines", humanize.Comma(count))
+		}
+
 		select {
 		case <-ctx.Done():
 			return 0, ctx.Err()
-		default:
-			count++
-			ch <- row
+		case ch <- row:
+			continue
 		}
 	}
 

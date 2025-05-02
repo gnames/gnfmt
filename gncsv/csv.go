@@ -161,7 +161,7 @@ func (g *gncsv) Read(ctx context.Context, ch chan<- []string) (int, error) {
 		count++
 		if count%100_000 == 0 {
 			fmt.Fprintf(os.Stderr, "\r%s", strings.Repeat(" ", 50))
-			fmt.Fprintf(os.Stderr, "\rProcessed %s lines", humanize.Comma(count))
+			fmt.Fprintf(os.Stderr, "\rRead %s file lines", humanize.Comma(count))
 		}
 
 		select {

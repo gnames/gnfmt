@@ -177,16 +177,21 @@ func TestWriteCSV(t *testing.T) {
 
 	for _, v := range tests {
 		path := filepath.Join("testdata", v.path)
+
 		opt := config.OptPath(path)
 		cfg, err := config.New(opt)
 		assert.Nil(err)
+
 		headers := cfg.Headers
 		r := gncsv.New(cfg)
 
 		tmpDir := os.TempDir()
 		pathWrite := filepath.Join(tmpDir, v.path)
+		f, err := os.Create(pathWrite)
+		assert.Nil(err)
 		opts := []config.Option{
 			config.OptPath(pathWrite),
+			config.OptWriter(f),
 			config.OptHeaders(headers),
 		}
 		cfgWrite, err := config.New(opts...)
