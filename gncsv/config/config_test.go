@@ -75,14 +75,6 @@ func TestNew(t *testing.T) {
 		)
 	})
 
-	// Test case: Missing file
-	t.Run("Missing file", func(t *testing.T) {
-		path := filepath.Join("..", "testdata", "missing.csv")
-		_, err := config.New(config.OptPath(path))
-		assert.NotNil(err)
-		assert.Equal(config.ErrFileMissing, err)
-	})
-
 	// Test case: No input or output provided
 	t.Run("No input or output", func(t *testing.T) {
 		_, err := config.New()

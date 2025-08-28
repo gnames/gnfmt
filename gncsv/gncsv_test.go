@@ -185,6 +185,9 @@ func TestWriteCSV(t *testing.T) {
 
 		tmpDir := os.TempDir()
 		pathWrite := filepath.Join(tmpDir, v.path)
+		if _, err := os.Stat(pathWrite); err == nil {
+			os.Remove(pathWrite)
+		}
 		opts := []config.Option{
 			config.OptPath(pathWrite),
 			config.OptHeaders(headers),

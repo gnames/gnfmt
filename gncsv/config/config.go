@@ -175,11 +175,12 @@ func New(opts ...Option) (Config, error) {
 	}
 	res.FieldsNum = len(res.Headers)
 
-	// we need either file to read from of output for new CSV.
+	// we need either file to read from or a writer for new CSV.
 	if res.Path == "" && res.Writer == nil {
 		return res, ErrNoInputOrOutput
 	}
 
+	// if separator is set and headers are provided we are done
 	if res.ColSep != 0 && len(res.Headers) > 0 {
 		return res, nil
 	}
@@ -188,6 +189,7 @@ func New(opts ...Option) (Config, error) {
 		if res.ColSep == 0 {
 			res.ColSep = ','
 		}
+		// headers are required for write mode
 		if len(res.Headers) == 0 {
 			return res, ErrNoHeaders
 		}
@@ -195,8 +197,20 @@ func New(opts ...Option) (Config, error) {
 		return res, nil
 	}
 
-	if exists, _ := gnsys.FileExists(res.Path); !exists {
-		return res, ErrFileMissing
+	// Check if file exists
+	exists, _ := gnsys.FileExists(res.Path)
+	if !exists {
+		// File doesn't exist - write mode: default to comma if we have headers
+		if len(res.Headers) > 0 && res.ColSep == 0 {
+			res.ColSep = ','
+			res.FieldsNum = len(res.Headers)
+			return res, nil
+		}
+		if len(res.Headers) == 0 {
+			return res, ErrNoHeaders
+		}
+
+		return res, nil
 	}
 
 	// try to open file
@@ -229,8 +243,14 @@ func New(opts ...Option) (Config, error) {
 	}
 
 	// we have to run opts again, because  Config is updated
+	originalColSep := res.ColSep
 	for _, opt := range opts {
 		opt(&res)
+	}
+
+	// If delimiter was detected from file but then cleared by opts, restore it
+	if res.ColSep == 0 && originalColSep != 0 {
+		res.ColSep = originalColSep
 	}
 
 	if res.ColSep == 0 || len(res.Headers) == 0 {
