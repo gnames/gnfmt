@@ -86,6 +86,8 @@ func TestLangCode2To3Letters(t *testing.T) {
 		iso1, iso3 string
 	}{
 		{"en", "eng"},
+		{"En", "eng"},
+		{"eN", "eng"},
 		{"fr", "fra"},
 		{"de", "deu"},
 		{"es", "spa"},
@@ -119,6 +121,9 @@ func TestLangCode3To2Letters(t *testing.T) {
 		iso3, iso1 string
 	}{
 		{"eng", "en"},
+		{"Eng", "en"},
+		{"ENG", "en"},
+		{"eNG", "en"},
 		{"fra", "fr"},
 		{"deu", "de"},
 		{"spa", "es"},
