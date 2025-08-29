@@ -15,6 +15,29 @@ var langMap = func() map[string]iso639_3 {
 }()
 
 var langCodeMap = map[iso639_3]string{
+	"bel": "Belarusian",
+	"bre": "Breton",
+	"bul": "Bulgarian",
+	"epo": "Esperanto",
+	"est": "Estonian",
+	"eus": "Basque",
+	"fas": "Farsi (Persian)",
+	"glg": "Galician",
+	"kan": "Kannada",
+	"kat": "Georgian",
+	"lav": "Latvian",
+	"ltz": "Luxembourgish",
+	"mkd": "Macedonian",
+	"myn": "Mayan languages",
+	"oci": "Occitan",
+	"oji": "Ojibwa",
+	"sat": "Santali",
+	"slk": "Slovak",
+	"srp": "Serbian",
+	"und": "Undetermined",
+	"nob": "Norwegian Bokmål",
+	"lit": "Lithuanian",
+	"ukr": "Ukranian",
 	"afr": "Afrikaans",
 	"aka": "Akan",     // Macro-language (includes Twi and Fante).                     |
 	"sqi": "Albanian", // Macro-language (includes Gheg, Tosk, etc.).                  |
@@ -52,6 +75,7 @@ var langCodeMap = map[iso639_3]string{
 	"grn": "Guarani",  // "Guaraní" is the same language; macro-language.              |
 	"gyn": "Guyanese", // Likely Guyanese Creole English.                              |
 	"hau": "Hausa",
+	"heb": "Hebrew",
 	"haw": "Hawaiian",
 	"hin": "Hindi",     //                                                                      |
 	"auc": "Huarani",   // Likely Waorani (also spelled Huaorani), spoken in Ecuador.   |
