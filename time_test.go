@@ -4,29 +4,28 @@ import (
 	"testing"
 
 	"github.com/gnames/gnfmt"
-	"github.com/matryer/is"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTimeString(t *testing.T) {
-	is := is.New(t)
 	tests := []struct {
 		name string
 		secs float64
 		str  string
 	}{
-		{"zero", 0, "00:00:00"},
-		{"sec", 30.3, "00:00:30"},
-		{"min", 185.43432, "00:03:05"},
-		{"hr", 7654.0003, "02:07:34"},
-		{"d", 88_000, "1 day 00:26:40"},
-		{"dd", 90_000_160.1234, "1041 days 16:02:40"},
-		{"ddd", 90_000_000.1234, "1041 days 16:00:00"},
+		{"zero", 0, "0sec"},
+		{"sec", 30.3, "30sec"},
+		{"min", 185.43432, "3m 5sec"},
+		{"hr", 7654.0003, "2h 7m 34sec"},
+		{"d", 88_000, "1d 26m 40sec"},
+		{"dd", 90_000_160.1234, "1041d 16h 2m 40sec"},
+		{"ddd", 90_000_000.1234, "1041d 16h 0m 0sec"},
 	}
 
 	for _, v := range tests {
 		t.Run(v.name, func(_ *testing.T) {
 			str := gnfmt.TimeString(v.secs)
-			is.Equal(v.str, str)
+			assert.Equal(t, v.str, str)
 		})
 	}
 }

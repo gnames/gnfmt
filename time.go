@@ -1,6 +1,9 @@
 package gnfmt
 
-import "fmt"
+import (
+	"fmt"
+	"strings"
+)
 
 func TimeString(secs float64) string {
 	type duration struct {
@@ -36,13 +39,20 @@ func TimeString(secs float64) string {
 
 	dur.seconds = resid
 	res := ""
-	switch dur.days {
-	case 0:
-	case 1:
-		res += fmt.Sprintf("%d day ", dur.days)
-	default:
-		res += fmt.Sprintf("%d days ", dur.days)
+
+	if dur.days > 0 {
+		res += fmt.Sprintf("%dd ", dur.days)
 	}
-	res += fmt.Sprintf("%02d:%02d:%02d", dur.hours, dur.minutes, dur.seconds)
-	return res
+
+	if dur.hours > 0 {
+		res += fmt.Sprintf("%dh ", dur.hours)
+	}
+
+	if dur.hours > 0 || dur.minutes > 0 {
+		res += fmt.Sprintf("%dm ", dur.minutes)
+	}
+
+	res += fmt.Sprintf("%dsec ", dur.seconds)
+
+	return strings.TrimSpace(res)
 }
