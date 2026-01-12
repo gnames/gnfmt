@@ -14,7 +14,7 @@ type GNjson struct {
 
 // Encode takes an object and coverts it into JSON. It returns an error
 // if the encoding fails.
-func (e GNjson) Encode(input interface{}) ([]byte, error) {
+func (e GNjson) Encode(input any) ([]byte, error) {
 	if e.Pretty {
 		return jsoniter.MarshalIndent(input, "", "  ")
 	}
@@ -23,7 +23,7 @@ func (e GNjson) Encode(input interface{}) ([]byte, error) {
 
 // Decode converts JSON into a go object. If decoding breaks, it
 // returns an error.
-func (e GNjson) Decode(input []byte, output interface{}) error {
+func (e GNjson) Decode(input []byte, output any) error {
 	r := bytes.NewReader(input)
 	err := jsoniter.NewDecoder(r).Decode(output)
 	return err
@@ -32,7 +32,7 @@ func (e GNjson) Decode(input []byte, output interface{}) error {
 // Output converts an object into a JSON string. It takes an object and
 // a format and returns the corresponding JSON string. In case of a problem
 // it returns an empty string.
-func (e GNjson) Output(input interface{}, f Format) string {
+func (e GNjson) Output(input any, f Format) string {
 	switch f {
 	case CompactJSON:
 		e.Pretty = false

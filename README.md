@@ -233,12 +233,12 @@ import (
 
 type MyCustomEncoder struct{}
 
-func (e MyCustomEncoder) Encode(input interface{}) ([]byte, error) {
+func (e MyCustomEncoder) Encode(input any) ([]byte, error) {
 	// Your encoding logic here
 	return []byte{}, nil
 }
 
-func (e MyCustomEncoder) Decode(input []byte, output interface{}) error {
+func (e MyCustomEncoder) Decode(input []byte, output any) error {
 	// Your decoding logic here
 	return nil
 }
@@ -263,7 +263,7 @@ import (
 
 type MyOutputter struct{}
 
-func (o MyOutputter) Output(record interface{}, f gnfmt.Format) string {
+func (o MyOutputter) Output(record any, f gnfmt.Format) string {
 	// Your custom output logic based on format
 	return ""
 }

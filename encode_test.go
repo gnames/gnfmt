@@ -41,7 +41,7 @@ func TestOutput(t *testing.T) {
 	tests := []struct {
 		name   string
 		format Format
-		input  interface{}
+		input  any
 		output string
 	}{
 		{
