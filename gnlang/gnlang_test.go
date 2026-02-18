@@ -53,6 +53,7 @@ func TestLang(t *testing.T) {
 		{"FRA", "French"},
 		{"spa", "Spanish"},
 		{"deu", "German"},
+		{"chi", "Chinese (Simplified)"},
 		{"zzz", ""},
 	}
 
@@ -67,6 +68,8 @@ func TestLangCode(t *testing.T) {
 	tests := []struct {
 		lang, code string
 	}{
+		{"Chinese (Simplified)", "chi"},
+		{"zh-CN", "chi"},
 		{"English", "eng"},
 		{"french", "fra"},
 		{"SPANISH", "spa"},

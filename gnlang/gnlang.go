@@ -50,6 +50,10 @@ func Lang(code string) string {
 // LangCode returns the ISO 639-3 code for the given language name.
 func LangCode(lang string) string {
 	lang = strings.ToLower(lang)
+	switch lang {
+	case "zh-cn":
+		return "chi"
+	}
 	if code, ok := langMap[lang]; ok {
 		return string(code)
 	}

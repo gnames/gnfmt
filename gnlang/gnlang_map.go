@@ -15,129 +15,130 @@ var langMap = func() map[string]iso639_3 {
 }()
 
 var langCodeMap = map[iso639_3]string{
+	"aer": "Eastern Arrernte", // An Indigenous Australian language.                           |
+	"afr": "Afrikaans",
+	"aka": "Akan",    // Macro-language (includes Twi and Fante).                     |
+	"amh": "Amharic", //                                                                      |
+	"ara": "Arabic",
+	"arn": "Mapuche",  // Also known as Mapudungun, spoken in Chile and Argentina.     |
+	"arw": "Arawak",   // Also known as Lokono, spoken in South America.               |
+	"asm": "Assamese", //                                                                      |
+	"auc": "Huarani",  // Likely Waorani (also spelled Huaorani), spoken in Ecuador.   |
+	"aym": "Aymara",   //                                                                      |
 	"bel": "Belarusian",
+	"ben": "Bengali", //                                                                      |
+	"bin": "Edo",     // Also known as Bini, spoken in Nigeria.                       |
+	"bis": "Bislama", // A creole language spoken in Vanuatu.                         |
 	"bre": "Breton",
+	"btq": "Batek", // A dialect of Temoq, spoken by the Batek people in Malaysia.  |
 	"bul": "Bulgarian",
+	"cat": "Catalan",  // "Catalán" is the same language.                              |
+	"ceb": "Cebuano",  //                                                                      |
+	"ces": "Czech",    //                                                                      |
+	"cha": "Chamorro", // Spoken in Guam and the Northern Mariana Islands.             |
+	"chi": "Chinese (Simplified)",
+	"dan": "Danish",
+	"deu": "German",
+	"efi": "Efik", // Spoken in Nigeria.                                           |
+	"ell": "Greek",
+	"eng": "English",
 	"epo": "Esperanto",
 	"est": "Estonian",
 	"eus": "Basque",
 	"fas": "Farsi (Persian)",
-	"glg": "Galician",
-	"kan": "Kannada",
-	"kat": "Georgian",
-	"lav": "Latvian",
-	"ltz": "Luxembourgish",
-	"mkd": "Macedonian",
-	"myn": "Mayan languages",
-	"oci": "Occitan",
-	"oji": "Ojibwa",
-	"sat": "Santali",
-	"slk": "Slovak",
-	"srp": "Serbian",
-	"und": "Undetermined",
-	"nob": "Norwegian Bokmål",
-	"lit": "Lithuanian",
-	"ukr": "Ukranian",
-	"afr": "Afrikaans",
-	"aka": "Akan",     // Macro-language (includes Twi and Fante).                     |
-	"sqi": "Albanian", // Macro-language (includes Gheg, Tosk, etc.).                  |
-	"amh": "Amharic",  //                                                                      |
-	"ara": "Arabic",
-	"arw": "Arawak",    // Also known as Lokono, spoken in South America.               |
-	"hye": "Armenian",  //                                                                      |
-	"asm": "Assamese",  //                                                                      |
-	"aym": "Aymara",    //                                                                      |
-	"btq": "Batek",     // A dialect of Temoq, spoken by the Batek people in Malaysia.  |
-	"ben": "Bengali",   //                                                                      |
-	"bis": "Bislama",   // A creole language spoken in Vanuatu.                         |
-	"mya": "Burmese",   // Also known as Myanmar language.                              |
-	"khm": "Cambodian", // Also known as Khmer.                                         |
-	"cat": "Catalan",   // "Catalán" is the same language.                              |
-	"ceb": "Cebuano",   //                                                                      |
-	"cha": "Chamorro",  // Spoken in Guam and the Northern Mariana Islands.             |
-	"zho": "Chinese",
-	"hrv": "Croat", // Also known as Croatian.                                      |
-	"ces": "Czech", //                                                                      |
-	"dan": "Danish",
-	"nld": "Dutch",            //                                                                      |
-	"aer": "Eastern Arrernte", // An Indigenous Australian language.                           |
-	"bin": "Edo",              // Also known as Bini, spoken in Nigeria.                       |
-	"efi": "Efik",             // Spoken in Nigeria.                                           |
-	"eng": "English",
 	"fij": "Fijian",   //                                                                      |
 	"fil": "Filipino", // Also known as Tagalog (see below).                           |
 	"fin": "Finnish",  //                                                                      |
 	"fra": "French",
 	"gla": "Gaelic", // Likely Scottish Gaelic (Irish Gaelic would be "gle").        |
-	"grt": "Garo",   // Spoken in India and Bangladesh.                              |
-	"deu": "German",
-	"ell": "Greek",
+	"glg": "Galician",
 	"grn": "Guarani",  // "Guaraní" is the same language; macro-language.              |
+	"grt": "Garo",     // Spoken in India and Bangladesh.                              |
 	"gyn": "Guyanese", // Likely Guyanese Creole English.                              |
 	"hau": "Hausa",
-	"heb": "Hebrew",
 	"haw": "Hawaiian",
+	"heb": "Hebrew",
 	"hin": "Hindi",     //                                                                      |
-	"auc": "Huarani",   // Likely Waorani (also spelled Huaorani), spoken in Ecuador.   |
+	"hrv": "Croat",     // Also known as Croatian.                                      |
 	"hun": "Hungarian", //                                                                      |
+	"hye": "Armenian",  //                                                                      |
 	"ibo": "Igbo",      //                                                                      |
 	"ilo": "Ilocano",   // Spoken in the Philippines.                                   |
 	"ind": "Indonesian",
 	"ita": "Italian",
-	"jpn": "Japanese",
 	"jav": "Javanese", //                                                                      |
-	"kaz": "Kazakh",   //                                                                      |
-	"kha": "Khasi",    // Spoken in India.                                             |
-	"kik": "Kikuyu",   // Also known as Gikuyu, spoken in Kenya.                       |
+	"jiv": "Shuar",    // Spoken in Ecuador and Peru.                                  |
+	"jpn": "Japanese",
+	"kan": "Kannada",
+	"kat": "Georgian",
+	"kaz": "Kazakh",    //                                                                      |
+	"kha": "Khasi",     // Spoken in India.                                             |
+	"khm": "Cambodian", // Also known as Khmer.                                         |
+	"kik": "Kikuyu",    // Also known as Gikuyu, spoken in Kenya.                       |
 	"kor": "Korean",
 	"kur": "Kurdish", // Macro-language (includes Kurmanji, Sorani, etc.).            |
 	"lao": "Lao",     //                                                                      |
-	"lug": "Luganda", // Also known as Ganda, spoken in Uganda.                       |
-	"mas": "Maasai",  // Spoken in Kenya and Tanzania.                                |
+	"lav": "Latvian",
+	"lit": "Lithuanian",
+	"ltz": "Luxembourgish",
+	"lug": "Luganda",   // Also known as Ganda, spoken in Uganda.                       |
+	"mal": "Malayalam", //                                                                      |
+	"mar": "Marathi",   //                                                                      |
+	"mas": "Maasai",    // Spoken in Kenya and Tanzania.                                |
+	"mkd": "Macedonian",
 	"mlg": "Malagasy",
-	"msa": "Malay",         // Macro-language (includes Indonesian).                        |
-	"mal": "Malayalam",     //                                                                      |
-	"mlt": "Maltese",       //                                                                      |
-	"mri": "Maori",         //                                                                      |
-	"arn": "Mapuche",       // Also known as Mapudungun, spoken in Chile and Argentina.     |
-	"mar": "Marathi",       //                                                                      |
-	"yua": "Mayan",         // Family of languages (e.g., K’iche’: "quc", Yucatec: "yua").  |
-	"nah": "Nahuatl",       // Macro-language, spoken in Mexico.                            |
-	"nep": "Nepali",        // "Nepalese" is the same language.                             |
-	"ntj": "Ngaanyatjarra", // An Indigenous Australian language.                           |
+	"mlt": "Maltese", //                                                                      |
+	"mri": "Maori",   //                                                                      |
+	"msa": "Malay",   // Macro-language (includes Indonesian).                        |
+	"mya": "Burmese", // Also known as Myanmar language.                              |
+	"myn": "Mayan languages",
+	"nah": "Nahuatl", // Macro-language, spoken in Mexico.                            |
+	"nep": "Nepali",  // "Nepalese" is the same language.                             |
+	"nld": "Dutch",   //                                                                      |
+	"nob": "Norwegian Bokmål",
 	"nor": "Norwegian",     // Macro-language (includes Bokmål: "nob", Nynorsk: "nno").     |
-	"orm": "Oromo",         // Macro-language, spoken in Ethiopia and Kenya.                |
-	"pol": "Polish",        //                                                                      |
+	"ntj": "Ngaanyatjarra", // An Indigenous Australian language.                           |
+	"oci": "Occitan",
+	"oji": "Ojibwa",
+	"orm": "Oromo",  // Macro-language, spoken in Ethiopia and Kenya.                |
+	"pol": "Polish", //                                                                      |
 	"por": "Portuguese",
 	"que": "Quechua", // Macro-language (includes many dialects); "Quichua" is a variant name. |
 	"ron": "Romanian",
 	"rus": "Russian",  //                                                                      |
-	"smo": "Samoan",   //                                                                      |
 	"san": "Sanskrit", // Classical language of India.                                 |
 	"sas": "Sasak",    // Spoken in Indonesia (Lombok).                                |
-	"jiv": "Shuar",    // Spoken in Ecuador and Peru.                                  |
-	"sin": "Sinhala",  // Also known as Sinhalese, spoken in Sri Lanka.                |
+	"sat": "Santali",
+	"sin": "Sinhala", // Also known as Sinhalese, spoken in Sri Lanka.                |
+	"slk": "Slovak",
 	"slv": "Slovenian",
+	"smo": "Samoan", //                                                                      |
 	"som": "Somali", //                                                                      |
 	"spa": "Spanish",
+	"sqi": "Albanian", // Macro-language (includes Gheg, Tosk, etc.).                  |
+	"srp": "Serbian",
 	"sun": "Sundanese", // Spoken in Indonesia (West Java).                             |
 	"swa": "Swahili",   // Macro-language, spoken in East Africa.                       |
 	"swe": "Swedish",
-	"tgl": "Tagalog", // "Filipino" is often used interchangeably.                    |
-	"tnq": "Taino",   // Extinct language of the Caribbean (reconstructed).           |
-	"tgk": "Tajik",   //                                                                      |
 	"tam": "Tamil",   //                                                                      |
+	"tgk": "Tajik",   //                                                                      |
+	"tgl": "Tagalog", // "Filipino" is often used interchangeably.                    |
 	"tha": "Thai",
-	"tpi": "Tok Pisin",  // A creole language spoken in Papua New Guinea.                |
-	"ton": "Tonga",      // Likely Tongan, spoken in Tonga.                              |
-	"top": "Totonac",    // Refers to Totonac languages (e.g., Papantla Totonac: "top"). |
-	"tur": "Turkish",    //                                                                      |
-	"tuk": "Turkmen",    //                                                                      |
+	"tnq": "Taino",     // Extinct language of the Caribbean (reconstructed).           |
+	"ton": "Tonga",     // Likely Tongan, spoken in Tonga.                              |
+	"top": "Totonac",   // Refers to Totonac languages (e.g., Papantla Totonac: "top"). |
+	"tpi": "Tok Pisin", // A creole language spoken in Papua New Guinea.                |
+	"tuk": "Turkmen",   //                                                                      |
+	"tur": "Turkish",   //                                                                      |
+	"ukr": "Ukranian",
+	"und": "Undetermined",
 	"urd": "Urdu",       //                                                                      |
 	"urh": "Urhobo",     // Spoken in Nigeria.                                           |
 	"vie": "Vietnamese", //                                                                      |
 	"wol": "Wolof",      // Spoken in Senegal, Gambia, and Mauritania.                   |
 	"yor": "Yoruba",     //                                                                      |
+	"yua": "Mayan",      // Family of languages (e.g., K’iche’: "quc", Yucatec: "yua").  |
+	"zho": "Chinese",
 	"zul": "Zulu",
 }
 
